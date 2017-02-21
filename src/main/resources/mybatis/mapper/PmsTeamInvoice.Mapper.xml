@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.paipianwang.pat.facade.finance.service.dao.impl.PmsTeamInvoiceDaoImpl">
+
+	<!-- 产品信息表 -->
+	<sql id="team_invoice"> TEAM_INVOICE </sql>
+	<sql id="indent_project"> INDENT_PROJECT </sql>
+	<sql id="team"> TEAM </sql>
+	<sql id="employee"> EMPLOYEE </sql>
+	
+	
+	
+	<select id="listPage" resultType="PmsTeamInvoice">
+		   SELECT i.INVOICE_ID AS invoiceId,
+				   i.INVOICE_CODE AS invoiceCode,
+				   i.INVOICE_TYPE AS invoiceType,
+				   i.INVOICE_CONTENT AS invoiceContent,
+				   FORMAT(i.INVOICE_TOTAL,2) AS invoiceTotal,
+				   i.INVOICE_RADIO AS invoiceRadio,
+				   DATE_FORMAT(i.INVOICE_STAMPTIME,'%Y-%m-%d')AS invoiceStampTime,
+				   DATE_FORMAT( i.INVOICE_TEAMTIME,'%Y-%m-%d') AS invoiceTeamTime,
+				   i.INVOICE_TEAMID AS invoiceTeamId,
+				   i.INVOICE_PROJECTID AS invoiceProjectId,
+				   i.INVOICE_EMPLOYEEID AS invoiceEmployeeId,
+				   i.INVOICE_NOTICE AS invoiceNotice,
+				   i.INVOICE_STATUS AS invoiceStatus,
+				   i.REASON AS reason,
+				   p.IP_PROJECT_NAME AS projectName,
+				   t.TEAMNAME AS teamName,
+				   e.employeeRealName AS invoiceEmployeeName
+			FROM 
+			<include refid="team_invoice" /> i
+			INNER JOIN 
+			<include refid="indent_project" /> p
+				ON i.INVOICE_PROJECTID = p.IP_ID
+			LEFT JOIN 
+			<include refid="team" /> t
+				ON i.INVOICE_TEAMID = t.TEAMID
+			LEFT JOIN 
+			<include refid="employee" /> e
+				 ON i.invoice_employeeId = e.employeeId
+			<where>
+				<if test="invoiceType != null and invoiceType != 0 ">
+					i.INVOICE_TYPE = ${invoiceType}
+				</if>
+				<if test="invoiceCode != null and invoiceCode != '' ">
+					AND i.INVOICE_CODE LIKE CONCAT('%',#{invoiceCode},'%')
+				</if>
+				<if test="invoiceProjectId != null ">
+					AND i.INVOICE_PROJECTID = ${invoiceProjectId}
+				</if>
+			</where>
+		ORDER BY
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			 ${sort} ${order},
+		</if>
+			 i.INVOICE_TEAMTIME DESC
+			LIMIT ${begin} , ${limit}
+	</select>
+	<select id="listPageCount" resultType="Long">
+			SELECT COUNT(1)
+				FROM 
+				<include refid="team_invoice" /> i
+			INNER JOIN 
+				<include refid="indent_project" /> p
+				ON i.INVOICE_PROJECTID = p.IP_ID
+			LEFT JOIN 
+				<include refid="team" /> t
+				ON i.INVOICE_TEAMID = t.TEAMID
+			LEFT JOIN 
+				<include refid="employee" /> e
+				 ON i.invoice_employeeId = e.employeeId
+		<where>
+			<if test="invoiceType != null and invoiceType != 0 ">
+				i.INVOICE_TYPE = ${invoiceType}
+			</if>
+			
+			<if test="invoiceCode != null and invoiceCode != '' ">
+				AND i.INVOICE_CODE LIKE CONCAT('%',#{invoiceCode},'%')
+			</if>
+			
+			<if test="invoiceProjectId != null ">
+				AND i.invoice_projectId = ${invoiceProjectId}
+			</if>
+		</where>
+	</select>
+	<update id="update">
+		UPDATE 
+		<include refid="team_invoice" />
+		<set>
+			INVOICE_CODE = #{invoiceCode},
+			INVOICE_TYPE = ${invoiceType},
+			INVOICE_CONTENT = #{invoiceContent},
+			INVOICE_TOTAL = ${invoiceTotal},
+			INVOICE_RADIO = #{invoiceRadio},
+			INVOICE_STAMPTIME = DATE_FORMAT(#{invoiceStampTime},'%Y-%m-%d'),
+			INVOICE_TEAMTIME = DATE_FORMAT(#{invoiceTeamTime},'%Y-%m-%d'),
+			INVOICE_TEAMID = ${invoiceTeamId},
+			INVOICE_PROJECTID = ${invoiceProjectId},
+			INVOICE_EMPLOYEEID = ${invoiceEmployeeId},
+			INVOICE_NOTICE = #{invoiceNotice},
+			INVOICE_STATUS = #{invoiceStatus}
+		</set>
+		<where>
+			INVOICE_ID = ${invoiceId}
+		</where>	
+	</update>
+	<insert id="save" useGeneratedKeys="true" keyProperty="invoiceId"
+		parameterType="PmsTeamInvoice">
+		<![CDATA[
+			INSERT INTO TEAM_INVOICE(INVOICE_CODE,
+			   INVOICE_TYPE,
+			   INVOICE_CONTENT,
+			   INVOICE_TOTAL,
+			   INVOICE_RADIO,
+			   INVOICE_STAMPTIME,
+			   INVOICE_TEAMTIME,
+			   INVOICE_TEAMID,
+			   INVOICE_PROJECTID,
+			   INVOICE_EMPLOYEEID,
+			   INVOICE_NOTICE,
+			   INVOICE_STATUS
+			  )
+			VALUES (
+			#{invoiceCode},
+			#{invoiceType},
+			#{invoiceContent},
+			${invoiceTotal},
+			#{invoiceRadio},
+			DATE_FORMAT(#{invoiceStampTime},'%Y-%m-%d'),
+			DATE_FORMAT(#{invoiceTeamTime},'%Y-%m-%d'),
+			${invoiceTeamId},
+			${invoiceProjectId},
+			${invoiceEmployeeId},
+			#{invoiceNotice},
+			#{invoiceStatus}
+			)
+		]]>
+	</insert>
+	<update id="agreeInvoiceByIds">
+		UPDATE 
+		<include refid="team_invoice" />
+		<set>
+			INVOICE_STATUS = 1,
+			REASON = ''
+		</set>
+		<where>
+			INVOICE_ID = -1
+			<if test="array != null and array != ''">
+				OR INVOICE_ID IN
+			<foreach collection="array" open="(" close=")" item="item"
+				separator=",">
+				#{item}
+			</foreach>
+		</if>
+		</where>
+	</update>
+	<update id="disagreeInvoice">
+		UPDATE 
+		<include refid="team_invoice" />
+		<set>
+			INVOICE_STATUS = 2,
+			REASON = #{reason}
+		</set>
+		<where>
+		 	INVOICE_ID = ${invoiceId}
+		</where>
+	</update>
+	<delete id="deleteByIds">
+		DELETE FROM 
+		<include refid="team_invoice" />
+		<where>
+			INVOICE_ID = -1
+			<if test="array != null and array != ''">
+				OR INVOICE_ID IN
+			<foreach collection="array" open="(" close=")" item="item"
+				separator=",">
+				#{item}
+			</foreach>
+		</if>
+		</where>
+	</delete>
+</mapper>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.paipianwang.pat.facade.finance.service.dao.impl.PmsFinanceDaoImpl">
+
+	<!-- 表 -->
+	<sql id="deal_log"> DEAL_LOG </sql>
+	<sql id="indent_project"> INDENT_PROJECT </sql>
+	
+	<select id="listPage" resultType="PmsDealLog">
+		SELECT 
+			dl.DL_BILLNO AS billNo,
+			DATE_FORMAT(dl.DL_CREATETIME,'%Y-%m-%d %T') AS createTime,
+			dl.DL_DEAL_LOG_SOURCE AS dealLogSource,
+			dl.DL_DEAL_STATUS AS dealStatus,
+			dl.DL_DESCRIPTION AS description,
+			dl.DL_ID AS dealId,
+			dl.DL_LOG_TYPE AS logType,
+			dl.DL_PAY_CHANNEL AS payChannel,
+			dl.DL_PAY_PRICE AS payPrice,
+			dl.DL_PROJECT_ID AS projectId,
+			ip.ip_project_name AS projectName,
+			DATE_FORMAT(dl.DL_UPDATETIME,'%Y-%m-%d %T') AS updateTime,
+			dl.DL_USER_ID AS userId,
+			dl.DL_USER_TYPR AS userType,
+			dl.DL_USER_NAME AS userName,
+			dl.DL_UN_ORDERID  AS unOrderId,
+			DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime
+			FROM 
+			<include refid="deal_log" /> dl 
+			INNER JOIN
+			<include refid="indent_project" /> ip 
+			ON dl.DL_PROJECT_ID = ip.IP_ID
+			<where>
+				dl.DL_DEAL_STATUS = 1
+				<if test="logType != null">
+					AND dl.DL_LOG_TYPE = ${logType}
+				</if>
+				
+				<if test="dealLogSource != null">
+					AND dl.DL_DEAL_LOG_SOURCE = ${dealLogSource}
+				</if>
+				
+				<if test="beginTime != null and beginTime != '' ">
+					AND DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d') &gt;= #{beginTime}
+				</if>
+				
+				<if test="endTime != null  and endTime != ''">
+					AND DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d') &lt;= #{endTime}
+				</if>
+			</where>
+			ORDER BY
+			<if test="sort != null and sort != '' and order != null and order != ''">
+				 ${sort} ${order},
+			</if>
+			dl.DL_PAYTIME DESC
+			LIMIT ${begin} , ${limit}
+	</select>
+	<select id="listPageCount" resultType="Long">
+		SELECT 
+			count(1)
+		FROM 
+		<include refid="deal_log" /> dl
+		<where>
+			dl.DL_DEAL_STATUS = 1
+			<if test="logType != null">
+				AND dl.DL_LOG_TYPE = ${logType}
+			</if>
+			
+			<if test="dealLogSource != null">
+				AND dl.DL_DEAL_LOG_SOURCE = ${dealLogSource}
+			</if>
+		</where>
+	</select>
+	
+	<insert id="save" useGeneratedKeys="true" keyProperty="dealId"
+		parameterType="PmsDealLog">
+		INSERT INTO 
+		<include refid="deal_log" /> 
+		(	DL_BILLNO,
+			DL_UN_ORDERID,
+			DL_DEAL_STATUS,
+			DL_USER_TYPR,
+			DL_USER_ID,
+			DL_USER_NAME,
+			DL_DEAL_LOG_SOURCE,
+			DL_LOG_TYPE,
+			DL_PROJECT_NAME,
+			DL_PROJECT_ID,
+			DL_PAY_PRICE,
+			DL_DESCRIPTION,
+			DL_PAYTIME
+		) 
+		VALUES
+		(	#{billNo},
+			#{unOrderId},
+			${dealStatus},
+			#{userType},
+			${userId},
+			#{userName},
+			${dealLogSource},
+			${logType},
+			#{projectName},
+			#{projectId},
+			${payPrice},
+			#{description},
+			#{payTime}
+		)
+	</insert>
+	<update id="update" >
+		UPDATE 
+		<include refid="deal_log" />  
+		<set>
+			DL_UN_ORDERID = #{unOrderId},
+			DL_DEAL_STATUS = ${dealStatus},
+			DL_USER_TYPR = #{userType},
+			DL_USER_ID = ${userId},
+			DL_USER_NAME = #{userName},
+			DL_DEAL_LOG_SOURCE = ${dealLogSource},
+			DL_LOG_TYPE = ${logType},
+			DL_PROJECT_NAME = #{projectName},
+			DL_PROJECT_ID = #{projectId},
+			DL_PAY_PRICE = ${payPrice},
+			DL_DESCRIPTION = #{description},
+			DL_PAYTIME = DATE_FORMAT(#{payTime},'%Y-%m-%d %T'),
+			DL_UPDATETIME = CURRENT_TIMESTAMP 
+		</set>
+		<where>
+			DL_ID = ${dealId}
+		</where>
+	</update>
+	<delete id="deleteByArray">
+		DELETE FROM 
+		<include refid="deal_log" /> 
+		<where>
+			DL_ID = -1
+			<if test="array != null and array != ''">
+				OR DL_ID IN
+				<foreach collection="array" open="(" close=")" item="item"
+					separator=",">
+					#{item}
+				</foreach>
+			</if>
+		</where> 
+			
+		
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>
