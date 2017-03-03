@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.util.Constants;
-import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.facade.finance.entity.PmsTeamInvoice;
 import com.paipianwang.pat.facade.finance.service.dao.PmsTeamInvoiceDao;
+import com.paipianwang.pat.facade.right.util.ValidateUtil;
 
 @Service
 @Transactional

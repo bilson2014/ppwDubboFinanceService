@@ -37,6 +37,11 @@
 			<artifactId>pat-facade-finance</artifactId>
 			<version>${pat-facade-finance.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.paipianwang.pat</groupId>
+			<artifactId>pat-facade-right</artifactId>
+			<version>${pat-facade-right.version}</version>
+		</dependency>
 
 		<!-- Common Dependency Begin -->
 		<dependency>

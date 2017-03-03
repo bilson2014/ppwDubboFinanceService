@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.util.Constants;
-import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.util.ValidateUtil;
 import com.paipianwang.pat.facade.finance.entity.PmsUserInvoice;
 import com.paipianwang.pat.facade.finance.service.dao.PmsUserInvoiceDao;
 
