@@ -34,10 +34,11 @@ public class PmsTeamInvoiceBiz {
 		return ret;
 	}
 	public long deleteByIds(final long[] ids) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("array", ids);
-		final long ret = pmsTeamInvoiceDao.deleteByIds(paramMap);
-		return ret;
+		if(ValidateUtil.isValid(ids)) {
+			final long ret = pmsTeamInvoiceDao.deleteByIds(ids);
+			return ret;
+		}
+		return 0;
 	}
 	public long auditing(final PmsTeamInvoice invoice) {
 		int status = invoice.getInvoiceStatus();//发票状态

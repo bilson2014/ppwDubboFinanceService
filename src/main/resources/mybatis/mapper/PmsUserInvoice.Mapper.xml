@@ -175,9 +175,9 @@
 			<include refid="user_invoice" />
 			<where>
 				INVOICE_ID = -1
-				<if test="array != null and array != ''">
+				<if test="ids != null and ids != ''">
 				OR INVOICE_ID IN
-			<foreach collection="array" open="(" close=")" item="item"
+			<foreach collection="ids" open="(" close=")" item="item"
 				separator=",">
 				#{item}
 			</foreach>

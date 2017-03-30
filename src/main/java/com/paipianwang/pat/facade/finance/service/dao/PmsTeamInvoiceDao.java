@@ -17,5 +17,4 @@ public interface PmsTeamInvoiceDao  extends BaseDao<PmsTeamInvoice>{
 
 	public long disagreeInvoice(final PmsTeamInvoice invoice);
 
-	public long deleteByIds(Map<String, Object> paramMap);
 }

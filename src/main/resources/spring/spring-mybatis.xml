@@ -60,5 +60,4 @@
 
 	<!-- 注解事务 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
-	<!--======= 事务配置 End =================== -->
 </beans>

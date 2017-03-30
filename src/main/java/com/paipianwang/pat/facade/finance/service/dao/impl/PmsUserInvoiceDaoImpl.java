@@ -15,7 +15,6 @@ public class PmsUserInvoiceDaoImpl extends BaseDaoImpl<PmsUserInvoice> implement
 	public static final String SQL_SAVE= "save";
 	public static final String SQL_AGREE_INVOICE_BY_IDS= "agreeInvoiceByIds";
 	public static final String SQL_DISAGREE_INVOICE= "disagreeInvoice";
-	public static final String SQL_DELETE_BY_IDS= "deleteByIds";
 	@Autowired
 	private SqlSessionTemplate sessionTemplate = null;
 
@@ -33,11 +32,5 @@ public class PmsUserInvoiceDaoImpl extends BaseDaoImpl<PmsUserInvoice> implement
 	public long disagreeInvoice(final PmsUserInvoice invoice) {
 		return sessionTemplate.update(getStatement(SQL_DISAGREE_INVOICE),invoice);
 	}
-
-	@Override
-	public long deleteByIds(Map<String, Object> paramMap) {
-		return sessionTemplate.delete(getStatement(SQL_DELETE_BY_IDS),paramMap);
-	}
-
 
 }
