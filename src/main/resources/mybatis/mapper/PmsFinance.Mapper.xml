@@ -19,7 +19,7 @@
 			dl.DL_PAY_CHANNEL AS payChannel,
 			dl.DL_PAY_PRICE AS payPrice,
 			dl.DL_PROJECT_ID AS projectId,
-			ip.ip_project_name AS projectName,
+			ip.IP_PROJECT_NAME AS projectName,
 			DATE_FORMAT(dl.DL_UPDATETIME,'%Y-%m-%d %T') AS updateTime,
 			dl.DL_USER_ID AS userId,
 			dl.DL_USER_TYPR AS userType,
@@ -48,6 +48,9 @@
 				<if test="endTime != null  and endTime != ''">
 					AND DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d') &lt;= #{endTime}
 				</if>
+				<if test="projectName != null  and projectName != ''">
+					AND ip.IP_PROJECT_NAME 	LIKE CONCAT('%',#{projectName},'%')
+				</if>
 			</where>
 			ORDER BY
 			<if test="sort != null and sort != '' and order != null and order != ''">
@@ -72,6 +75,9 @@
 			
 			<if test="dealLogSource != null">
 				AND dl.DL_DEAL_LOG_SOURCE = ${dealLogSource}
+			</if>
+			<if test="projectName != null  and projectName != ''">
+				AND ip.IP_PROJECT_NAME 	LIKE CONCAT('%',#{projectName},'%')
 			</if>
 		</where>
 	</select>
