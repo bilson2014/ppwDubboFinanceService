@@ -1,5 +1,6 @@
 package com.paipianwang.pat.facade.finance.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.facade.finance.entity.PmsTeamInvoice;
 import com.paipianwang.pat.facade.finance.entity.PmsUserInvoice;
 import com.paipianwang.pat.facade.finance.service.PmsUserInvoiceFacade;
 import com.paipianwang.pat.facade.finance.service.biz.PmsUserInvoiceBiz;
@@ -45,4 +47,7 @@ public class PmsUserInvoiceServiceImpl implements PmsUserInvoiceFacade {
 		return pmsUserInvoiceBiz.auditing(invoice);
 	}
 
+	public List<PmsUserInvoice> findUserInvoiceWithCondition(final Map<String, Object> paramMap) {
+		return pmsUserInvoiceBiz.findUserInvoiceWithCondition(paramMap);
+	}
 }

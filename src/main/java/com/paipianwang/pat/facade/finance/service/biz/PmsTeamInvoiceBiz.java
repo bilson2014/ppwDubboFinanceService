@@ -1,6 +1,7 @@
 package com.paipianwang.pat.facade.finance.service.biz;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,14 @@ public class PmsTeamInvoiceBiz {
 			}
 		}
 		return 0;
+	}
+	
+	public long listPageCount(Map<String, Object> paramMap) {
+		return pmsTeamInvoiceDao.listPageCount(paramMap);
+	}
+	
+	public List<PmsTeamInvoice> findTeamInvoiceWithCondition(Map<String, Object> paramMap) {
+		return pmsTeamInvoiceDao.listBy(paramMap);
 	}
 
 }

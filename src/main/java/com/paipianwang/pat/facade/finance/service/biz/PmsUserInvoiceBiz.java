@@ -1,6 +1,7 @@
 package com.paipianwang.pat.facade.finance.service.biz;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.paipianwang.pat.common.constant.PmsConstant;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.finance.entity.PmsTeamInvoice;
 import com.paipianwang.pat.facade.finance.entity.PmsUserInvoice;
 import com.paipianwang.pat.facade.finance.service.dao.PmsUserInvoiceDao;
 
@@ -58,6 +60,10 @@ public class PmsUserInvoiceBiz {
 			}
 		}
 		return 0;
+	}
+
+	public List<PmsUserInvoice> findUserInvoiceWithCondition(Map<String, Object> paramMap) {
+		return pmsUserInvoiceDao.listBy(paramMap);
 	}
 
 }

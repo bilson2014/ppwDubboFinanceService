@@ -1,5 +1,6 @@
 package com.paipianwang.pat.facade.finance.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,15 @@ public class PmsTeamInvoiceServiceImpl implements PmsTeamInvoiceFacade {
 	@Override
 	public long auditing(final PmsTeamInvoice invoice) {
 		return pmsTeamInvoiceBiz.auditing(invoice);
+	}
+
+	@Override
+	public long count(Map<String, Object> paramMap) {
+		return pmsTeamInvoiceBiz.listPageCount(paramMap);
+	}
+	
+	public List<PmsTeamInvoice> findTeamInvoiceWithCondition(final Map<String, Object> paramMap) {
+		return pmsTeamInvoiceBiz.findTeamInvoiceWithCondition(paramMap);
 	}
 
 }

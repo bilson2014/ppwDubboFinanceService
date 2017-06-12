@@ -9,7 +9,17 @@
 	<sql id="team"> TEAM </sql>
 	<sql id="employee"> EMPLOYEE </sql>
 	
-	
+	<sql id="sql_condition">
+		<if test="invoiceType != null and invoiceType != 0 ">
+			i.INVOICE_TYPE = ${invoiceType}
+		</if>
+		<if test="invoiceCode != null and invoiceCode != '' ">
+			AND i.INVOICE_CODE LIKE CONCAT('%',#{invoiceCode},'%')
+		</if>
+		<if test="invoiceProjectId != null ">
+			AND i.INVOICE_PROJECTID = ${invoiceProjectId}
+		</if>
+	</sql>
 	
 	<select id="listPage" resultType="PmsTeamInvoice">
 		   SELECT i.INVOICE_ID AS invoiceId,
@@ -41,15 +51,7 @@
 			<include refid="employee" /> e
 				 ON i.invoice_employeeId = e.employeeId
 			<where>
-				<if test="invoiceType != null and invoiceType != 0 ">
-					i.INVOICE_TYPE = ${invoiceType}
-				</if>
-				<if test="invoiceCode != null and invoiceCode != '' ">
-					AND i.INVOICE_CODE LIKE CONCAT('%',#{invoiceCode},'%')
-				</if>
-				<if test="invoiceProjectId != null ">
-					AND i.INVOICE_PROJECTID = ${invoiceProjectId}
-				</if>
+				<include refid="sql_condition" />
 			</where>
 		ORDER BY
 		<if test="sort != null and sort != '' and order != null and order != ''">
@@ -58,6 +60,7 @@
 			 i.INVOICE_TEAMTIME DESC
 			LIMIT ${begin} , ${limit}
 	</select>
+	
 	<select id="listPageCount" resultType="Long">
 			SELECT COUNT(1)
 				FROM 
@@ -72,19 +75,40 @@
 				<include refid="employee" /> e
 				 ON i.invoice_employeeId = e.employeeId
 		<where>
-			<if test="invoiceType != null and invoiceType != 0 ">
-				i.INVOICE_TYPE = ${invoiceType}
-			</if>
-			
-			<if test="invoiceCode != null and invoiceCode != '' ">
-				AND i.INVOICE_CODE LIKE CONCAT('%',#{invoiceCode},'%')
-			</if>
-			
-			<if test="invoiceProjectId != null ">
-				AND i.invoice_projectId = ${invoiceProjectId}
-			</if>
+			<include refid="sql_condition" />
 		</where>
 	</select>
+	
+	<select id="listBy" resultType="PmsTeamInvoice">
+		SELECT i.INVOICE_ID AS invoiceId,
+			   i.INVOICE_CODE AS invoiceCode,
+			   i.INVOICE_TYPE AS invoiceType,
+			   i.INVOICE_CONTENT AS invoiceContent,
+			   FORMAT(i.INVOICE_TOTAL,2) AS invoiceTotal,
+			   i.INVOICE_RADIO AS invoiceRadio,
+			   DATE_FORMAT(i.INVOICE_STAMPTIME,'%Y-%m-%d')AS invoiceStampTime,
+			   DATE_FORMAT( i.INVOICE_TEAMTIME,'%Y-%m-%d') AS invoiceTeamTime,
+			   i.INVOICE_TEAMID AS invoiceTeamId,
+			   i.INVOICE_PROJECTID AS invoiceProjectId,
+			   i.INVOICE_EMPLOYEEID AS invoiceEmployeeId,
+			   i.INVOICE_NOTICE AS invoiceNotice,
+			   i.INVOICE_STATUS AS invoiceStatus,
+			   i.REASON AS reason,
+			   p.IP_PROJECT_NAME AS projectName,
+			   t.TEAMNAME AS teamName,
+			   e.employeeRealName AS invoiceEmployeeName
+			FROM  <include refid="team_invoice" /> i
+			INNER JOIN  <include refid="indent_project" /> p
+				ON i.INVOICE_PROJECTID = p.IP_ID
+			LEFT JOIN  <include refid="team" /> t
+				ON i.INVOICE_TEAMID = t.TEAMID
+			LEFT JOIN  <include refid="employee" /> e
+				ON i.invoice_employeeId = e.employeeId
+			<where>
+				<include refid="sql_condition" />
+			</where>
+	</select>
+	
 	<update id="update">
 		UPDATE 
 		<include refid="team_invoice" />
@@ -106,6 +130,7 @@
 			INVOICE_ID = ${invoiceId}
 		</where>	
 	</update>
+	
 	<insert id="save" useGeneratedKeys="true" keyProperty="invoiceId"
 		parameterType="PmsTeamInvoice">
 		<![CDATA[
@@ -138,6 +163,7 @@
 			)
 		]]>
 	</insert>
+	
 	<update id="agreeInvoiceByIds">
 		UPDATE 
 		<include refid="team_invoice" />
@@ -156,6 +182,7 @@
 		</if>
 		</where>
 	</update>
+	
 	<update id="disagreeInvoice">
 		UPDATE 
 		<include refid="team_invoice" />
@@ -167,6 +194,7 @@
 		 	INVOICE_ID = ${invoiceId}
 		</where>
 	</update>
+	
 	<delete id="deleteByIds">
 		DELETE FROM 
 		<include refid="team_invoice" />
