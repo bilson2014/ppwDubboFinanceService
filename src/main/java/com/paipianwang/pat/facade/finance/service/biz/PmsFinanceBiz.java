@@ -33,6 +33,7 @@ public class PmsFinanceBiz {
 		return pmsFinanceDao.update(dealLog);
 	}
 
+	@Transactional
 	public long deleteByArray(final long[] ids) {
 		if(ValidateUtil.isValid(ids)){
 			Map<String, Object> paramMap = new HashMap<>();

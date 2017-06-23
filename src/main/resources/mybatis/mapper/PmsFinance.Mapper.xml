@@ -151,16 +151,6 @@
 				</foreach>
 			</if>
 		</where> 
-			
-		
 	</delete>
-	
-	
-	
-	
-	
-	
-	
-	
 	
 </mapper>

@@ -21,6 +21,16 @@
 		<if test="invoiceProjectId != null ">
 			AND i.invoice_projectId = ${invoiceProjectId}
 		</if>
+		<if test="invoiceBeginDate != null and invoiceBeginDate != '' ">
+			<![CDATA[
+				AND DATE_FORMAT(INVOICE_STAMPTIME,'%Y-%m-%d') >= #{invoiceBeginDate}
+			]]>
+		</if>
+		<if test="invoiceEndDate != null  and invoiceEndDate != ''">
+			<![CDATA[
+				AND DATE_FORMAT(INVOICE_STAMPTIME,'%Y-%m-%d') <= #{invoiceEndDate}
+			]]>
+		</if>
 	</sql>
 	
 	<select id="listPage" resultType="PmsUserInvoice">

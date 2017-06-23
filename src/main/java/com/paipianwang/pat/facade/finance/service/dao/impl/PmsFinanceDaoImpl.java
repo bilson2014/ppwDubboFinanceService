@@ -19,7 +19,6 @@ public class PmsFinanceDaoImpl extends BaseDaoImpl<PmsDealLog> implements PmsFin
 	@Autowired
 	private SqlSessionTemplate sessionTemplate = null;
 	
-	
 	@Override
 	public long save(PmsDealLog dealLog) {
 		return sessionTemplate.insert(getStatement(SQL_SAVE),dealLog);
