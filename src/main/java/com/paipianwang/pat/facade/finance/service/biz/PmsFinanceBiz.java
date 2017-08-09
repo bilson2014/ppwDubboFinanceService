@@ -1,6 +1,7 @@
 package com.paipianwang.pat.facade.finance.service.biz;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,13 @@ public class PmsFinanceBiz {
 			return ret;
 		}
 		return 0l;
+	}
+
+	@Transactional
+	public List<PmsDealLog> listBy(String projectId) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("projectId", projectId);
+		return pmsFinanceDao.listBy(paramMap);
 	}
 	
 }

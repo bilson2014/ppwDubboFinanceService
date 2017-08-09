@@ -1,8 +1,9 @@
 package com.paipianwang.pat.facade.finance.service.impl;
 
-
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +13,15 @@ import com.paipianwang.pat.facade.finance.entity.PmsDealLog;
 import com.paipianwang.pat.facade.finance.service.PmsFinanceFacade;
 import com.paipianwang.pat.facade.finance.service.biz.PmsFinanceBiz;
 
-
 @Service("pmsFinanceFacade")
-public class PmsFinanceServiceImpl implements PmsFinanceFacade{
+public class PmsFinanceServiceImpl implements PmsFinanceFacade {
 
 	@Autowired
 	private PmsFinanceBiz pmsFinanceBiz;
 
 	@Override
 	public DataGrid<PmsDealLog> listWithPagination(PageParam pageParam, Map<String, Object> paramMap) {
-		return pmsFinanceBiz.listWithPagination(pageParam,paramMap);
+		return pmsFinanceBiz.listWithPagination(pageParam, paramMap);
 	}
 
 	@Override
@@ -37,6 +37,16 @@ public class PmsFinanceServiceImpl implements PmsFinanceFacade{
 	@Override
 	public long deleteByArray(final long[] ids) {
 		return pmsFinanceBiz.deleteByArray(ids);
+	}
+
+	@Override
+	public boolean isExistByProjectId(final String projectId) {
+		if (StringUtils.isNotBlank(projectId)) {
+			List<PmsDealLog> list = pmsFinanceBiz.listBy(projectId);
+			if (list == null)
+				return false;
+		}
+		return true;
 	}
 
 }

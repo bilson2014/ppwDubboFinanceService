@@ -7,6 +7,29 @@
 	<sql id="deal_log"> DEAL_LOG </sql>
 	<sql id="indent_project"> INDENT_PROJECT </sql>
 	
+	<select id="listBy" resultType="PmsDealLog">
+		SELECT 
+			dl.DL_BILLNO AS billNo,
+			dl.DL_DEAL_LOG_SOURCE AS dealLogSource,
+			dl.DL_DEAL_STATUS AS dealStatus,
+			dl.DL_DESCRIPTION AS description,
+			dl.DL_ID AS dealId,
+			dl.DL_LOG_TYPE AS logType,
+			dl.DL_PAY_CHANNEL AS payChannel,
+			dl.DL_PAY_PRICE AS payPrice,
+			dl.DL_PROJECT_ID AS projectId,
+			dl.DL_USER_ID AS userId,
+			dl.DL_USER_TYPR AS userType,
+			dl.DL_USER_NAME AS userName,
+			dl.DL_UN_ORDERID  AS unOrderId,
+			DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime
+			FROM 
+				<include refid="deal_log" /> dl 
+			<where>
+				dl.DL_PROJECT_ID = #{projectId}
+			</where>
+	</select>
+	
 	<select id="listPage" resultType="PmsDealLog">
 		SELECT 
 			dl.DL_BILLNO AS billNo,
@@ -98,6 +121,9 @@
 			DL_PROJECT_ID,
 			DL_PAY_PRICE,
 			DL_DESCRIPTION,
+			<if test="payChannel != null and payChannel != ''">
+				DL_PAY_CHANNEL,
+			</if>
 			DL_PAYTIME
 		) 
 		VALUES
@@ -113,6 +139,9 @@
 			#{projectId},
 			${payPrice},
 			#{description},
+			<if test="payChannel != null and payChannel != ''">
+				#{payChannel},
+			</if>
 			#{payTime}
 		)
 	</insert>
@@ -138,6 +167,7 @@
 			DL_ID = ${dealId}
 		</where>
 	</update>
+	
 	<delete id="deleteByArray">
 		DELETE FROM 
 		<include refid="deal_log" /> 
