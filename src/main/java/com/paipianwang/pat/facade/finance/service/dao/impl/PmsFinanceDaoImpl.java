@@ -1,6 +1,7 @@
 package com.paipianwang.pat.facade.finance.service.dao.impl;
 
 
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -15,6 +16,7 @@ public class PmsFinanceDaoImpl extends BaseDaoImpl<PmsDealLog> implements PmsFin
 
 	public static final String SQL_SAVE= "save";
 	public static final String SQL_DELETE_BY_ARRAY= "deleteByArray";
+	public static final String SQL_LIST_BY_MAP = "listByMap";
 	
 	@Autowired
 	private SqlSessionTemplate sessionTemplate = null;
@@ -27,6 +29,11 @@ public class PmsFinanceDaoImpl extends BaseDaoImpl<PmsDealLog> implements PmsFin
 	@Override
 	public long deleteByArray(Map<String, Object> paramMap) {
 		return sessionTemplate.delete(getStatement(SQL_DELETE_BY_ARRAY),paramMap);
+	}
+
+	@Override
+	public List<Object> listByMap(Map<String, Map<String, Object>> paramMap) {
+		return sessionTemplate.selectList(getStatement(SQL_LIST_BY_MAP), paramMap);
 	}
 
 }

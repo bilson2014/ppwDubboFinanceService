@@ -7,6 +7,26 @@
 	<sql id="deal_log"> DEAL_LOG </sql>
 	<sql id="indent_project"> INDENT_PROJECT </sql>
 	
+	<!-- where 条件 -->
+	<sql id="search_condition">
+		<if test="condition != null">
+			<foreach collection="condition.keys" item="key" separator=" AND ">
+				<if test="condition[key] != null and condition[key] != ''">
+					${key} = #{condition[${key}]}
+				</if>
+			</foreach>
+		</if>
+	</sql>
+	
+	<resultMap type="PmsDealLog" id="PmsDealLogMap">
+		<id column="dl_id" property="dealId" />
+		<result column="dl_billNo" property="billNo" />
+		<result column="dl_project_id" property="projectId" />
+		<result column="dl_pay_price" property="payPrice" />
+		<result column="dl_paytime" property="payTime" />
+		<result column="dl_description" property="description" />
+	</resultMap>
+	
 	<select id="listBy" resultType="PmsDealLog">
 		SELECT 
 			dl.DL_BILLNO AS billNo,
@@ -82,6 +102,7 @@
 			dl.DL_PAYTIME DESC
 			LIMIT ${begin} , ${limit}
 	</select>
+	
 	<select id="listPageCount" resultType="Long">
 		SELECT 
 			count(1)
@@ -102,6 +123,17 @@
 			<if test="projectName != null  and projectName != ''">
 				AND ip.IP_PROJECT_NAME 	LIKE CONCAT('%',#{projectName},'%')
 			</if>
+		</where>
+	</select>
+	
+	<select id="listByMap" parameterType="java.util.Map" resultType="java.util.HashMap">
+		SELECT 	
+			<foreach collection="metaData.keys" item="key" separator=",">
+					${key}
+			</foreach>
+		FROM <include refid="deal_log" />
+		<where>
+			<include refid="search_condition" />
 		</where>
 	</select>
 	

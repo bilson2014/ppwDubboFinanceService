@@ -272,7 +272,7 @@
 		<resources>
 			<resource>
 				<targetPath>${project.build.directory}/classes</targetPath>
-				<directory>src/test/resources</directory>
+				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 				<includes>
 					<include>**/*.xml</include>
@@ -282,7 +282,7 @@
 			<!-- 结合com.alibaba.dubbo.container.Main -->
 			<resource>
 				<targetPath>${project.build.directory}/classes/META-INF/spring</targetPath>
-				<directory>src/test/resources/spring</directory>
+				<directory>src/main/resources/spring</directory>
 				<filtering>true</filtering>
 				<includes>
 					<include>spring-context.xml</include>

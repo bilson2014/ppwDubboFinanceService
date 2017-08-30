@@ -49,4 +49,12 @@ public class PmsFinanceServiceImpl implements PmsFinanceFacade {
 		return true;
 	}
 
+	@Override
+	public Map<String, List<Map<String, Object>>> getFinancesByProjectId(List<String> metaData, String projectId) {
+		if(metaData != null && !metaData.isEmpty() && StringUtils.isNotEmpty(projectId)) {
+			return pmsFinanceBiz.listByMap(metaData, projectId);
+		}
+		return null;
+	}
+
 }
