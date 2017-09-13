@@ -17,6 +17,7 @@ public class PmsFinanceDaoImpl extends BaseDaoImpl<PmsDealLog> implements PmsFin
 	public static final String SQL_SAVE= "save";
 	public static final String SQL_DELETE_BY_ARRAY= "deleteByArray";
 	public static final String SQL_LIST_BY_MAP = "listByMap";
+	public static final String SQL_LIST_BY_PROJECTID= "listByProjectId";
 	
 	@Autowired
 	private SqlSessionTemplate sessionTemplate = null;
@@ -34,6 +35,10 @@ public class PmsFinanceDaoImpl extends BaseDaoImpl<PmsDealLog> implements PmsFin
 	@Override
 	public List<Object> listByMap(Map<String, Map<String, Object>> paramMap) {
 		return sessionTemplate.selectList(getStatement(SQL_LIST_BY_MAP), paramMap);
+	}
+	@Override
+	public List<PmsDealLog> listByProjectId(String projectId) {
+		return sessionTemplate.selectList(getStatement(SQL_LIST_BY_PROJECTID), projectId);
 	}
 
 }

@@ -215,4 +215,28 @@
 		</where> 
 	</delete>
 	
+	<select id="listByProjectId" resultType="PmsDealLog">
+		SELECT 
+			dl.DL_BILLNO AS billNo,
+			DATE_FORMAT(dl.DL_CREATETIME,'%Y-%m-%d %T') AS createTime,
+			dl.DL_DEAL_LOG_SOURCE AS dealLogSource,
+			dl.DL_DEAL_STATUS AS dealStatus,
+			dl.DL_DESCRIPTION AS description,
+			dl.DL_ID AS dealId,
+			dl.DL_LOG_TYPE AS logType,
+			dl.DL_PAY_CHANNEL AS payChannel,
+			dl.DL_PAY_PRICE AS payPrice,
+			dl.DL_PROJECT_ID AS projectId,
+			DATE_FORMAT(dl.DL_UPDATETIME,'%Y-%m-%d %T') AS updateTime,
+			dl.DL_USER_ID AS userId,
+			dl.DL_USER_TYPR AS userType,
+			dl.DL_USER_NAME AS userName,
+			dl.DL_UN_ORDERID  AS unOrderId,
+			DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime
+			FROM 
+			<include refid="deal_log" /> dl 
+			<where>
+			dl.DL_PROJECT_ID=#{projectId}
+			</where>
+	</select>
 </mapper>

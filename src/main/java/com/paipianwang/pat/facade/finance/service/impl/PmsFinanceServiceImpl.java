@@ -1,5 +1,6 @@
 package com.paipianwang.pat.facade.finance.service.impl;
 
+
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,10 @@ public class PmsFinanceServiceImpl implements PmsFinanceFacade {
 			return pmsFinanceBiz.listByMap(metaData, projectId);
 		}
 		return null;
+	}
+	@Override
+	public List<PmsDealLog> listByProjectId(String projectId) {
+		return pmsFinanceBiz.listByProjectId(projectId);
 	}
 
 }

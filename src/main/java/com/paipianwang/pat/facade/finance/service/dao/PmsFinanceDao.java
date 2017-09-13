@@ -15,5 +15,7 @@ public interface PmsFinanceDao extends BaseDao<PmsDealLog>{
 	public long deleteByArray(final Map<String, Object> paramMap);
 
 	public List<Object> listByMap(Map<String, Map<String, Object>> param);
+	
+	public List<PmsDealLog> listByProjectId(String projectId);
 
 }

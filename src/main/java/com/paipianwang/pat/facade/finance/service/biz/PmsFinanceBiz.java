@@ -102,5 +102,8 @@ public class PmsFinanceBiz {
 		return null;
 	}
 	
+	public List<PmsDealLog> listByProjectId(String projectId) {
+		return pmsFinanceDao.listByProjectId(projectId);
+	}
 	
 }
