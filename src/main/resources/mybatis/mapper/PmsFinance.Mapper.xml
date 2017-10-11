@@ -6,6 +6,7 @@
 	<!-- 表 -->
 	<sql id="deal_log"> DEAL_LOG </sql>
 	<sql id="indent_project"> INDENT_PROJECT </sql>
+	<sql id="deal_log_view"> PROJECT_DEAL_LOG_VIEW </sql>
 	
 	<!-- where 条件 -->
 	<sql id="search_condition">
@@ -51,6 +52,76 @@
 	</select>
 	
 	<select id="listPage" resultType="PmsDealLog">
+		SELECT 
+			BILLNO,
+			CREATETIME,
+			DEALLOGSOURCE,
+			DEALSTATUS,
+			DESCRIPTION,
+			DEALID,
+			LOGTYPE,
+			PAYCHANNEL,
+			PAYPRICE,
+			PROJECTID,
+			PROJECTNAME,
+			UPDATETIME,
+			USERID,
+			USERTYPE,
+			USERNAME,
+			UNORDERID,
+			PAYTIME
+		FROM 
+			<include refid="deal_log_view" /> dlv
+		<where>
+			dlv.DEALSTATUS = 1
+			<if test="logType != null">
+				AND dlv.LOGTYPE = ${logType}
+			</if>
+			
+			<if test="dealLogSource != null">
+				AND dlv.DEALLOGSOURCE = ${dealLogSource}
+			</if>
+			
+			<if test="beginTime != null and beginTime != '' ">
+				AND DATE_FORMAT(dlv.PAYTIME,'%Y-%m-%d') &gt;= #{beginTime}
+			</if>
+			
+			<if test="endTime != null  and endTime != ''">
+				AND DATE_FORMAT(dlv.PAYTIME,'%Y-%m-%d') &lt;= #{endTime}
+			</if>
+			<if test="projectName != null  and projectName != ''">
+				AND dlv.PROJECTNAME LIKE CONCAT('%',#{projectName},'%')
+			</if>
+		</where>
+			ORDER BY
+			<if test="sort != null and sort != '' and order != null and order != ''">
+				 ${sort} ${order},
+			</if>
+			dlv.PAYTIME DESC
+			LIMIT ${begin} , ${limit}
+	</select>
+	
+	<select id="listPageCount" resultType="Long">
+		SELECT 
+			count(1)
+		FROM 
+		<include refid="deal_log_view" /> dlv
+		<where>
+			dlv.DEALSTATUS = 1
+			<if test="logType != null">
+				AND dlv.LOGTYPE = ${logType}
+			</if>
+			
+			<if test="dealLogSource != null">
+				AND dlv.DEALLOGSOURCE = ${dealLogSource}
+			</if>
+			<if test="projectName != null  and projectName != ''">
+				AND dlv.PROJECTNAME LIKE CONCAT('%',#{projectName},'%')
+			</if>
+		</where>
+	</select>
+	
+	<!-- <select id="listPage" resultType="PmsDealLog">
 		SELECT 
 			dl.DL_BILLNO AS billNo,
 			DATE_FORMAT(dl.DL_CREATETIME,'%Y-%m-%d %T') AS createTime,
@@ -124,7 +195,7 @@
 				AND ip.IP_PROJECT_NAME 	LIKE CONCAT('%',#{projectName},'%')
 			</if>
 		</where>
-	</select>
+	</select> -->
 	
 	<select id="listByMap" parameterType="java.util.Map" resultType="java.util.HashMap">
 		SELECT 	
