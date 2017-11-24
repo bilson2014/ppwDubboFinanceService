@@ -5,7 +5,7 @@
 
 	<!-- 产品信息表 -->
 	<sql id="team_invoice"> TEAM_INVOICE </sql>
-	<sql id="indent_project"> INDENT_PROJECT </sql>
+	<sql id="view_project_flow_relation"> INDENT_PROJECT_RELATION_VIEW </sql>
 	<sql id="team"> TEAM </sql>
 	<sql id="employee"> EMPLOYEE </sql>
 	
@@ -46,14 +46,14 @@
 				   i.INVOICE_NOTICE AS invoiceNotice,
 				   i.INVOICE_STATUS AS invoiceStatus,
 				   i.REASON AS reason,
-				   p.IP_PROJECT_NAME AS projectName,
+				   p.PROJECTNAME AS projectName,
 				   t.TEAMNAME AS teamName,
 				   e.employeeRealName AS invoiceEmployeeName
 			FROM 
 			<include refid="team_invoice" /> i
 			INNER JOIN 
-			<include refid="indent_project" /> p
-				ON i.INVOICE_PROJECTID = p.IP_ID
+			<include refid="view_project_flow_relation" /> p
+				ON i.INVOICE_PROJECTID = p.projectId
 			LEFT JOIN 
 			<include refid="team" /> t
 				ON i.INVOICE_TEAMID = t.TEAMID
@@ -76,8 +76,8 @@
 				FROM 
 				<include refid="team_invoice" /> i
 			INNER JOIN 
-				<include refid="indent_project" /> p
-				ON i.INVOICE_PROJECTID = p.IP_ID
+				<include refid="view_project_flow_relation" /> p
+				ON i.INVOICE_PROJECTID = p.projectId
 			LEFT JOIN 
 				<include refid="team" /> t
 				ON i.INVOICE_TEAMID = t.TEAMID
@@ -104,12 +104,13 @@
 			   i.INVOICE_NOTICE AS invoiceNotice,
 			   i.INVOICE_STATUS AS invoiceStatus,
 			   i.REASON AS reason,
-			   p.IP_PROJECT_NAME AS projectName,
+			   p.PROJECTNAME AS projectName,
 			   t.TEAMNAME AS teamName,
 			   e.employeeRealName AS invoiceEmployeeName
 			FROM  <include refid="team_invoice" /> i
-			INNER JOIN  <include refid="indent_project" /> p
-				ON i.INVOICE_PROJECTID = p.IP_ID
+			INNER JOIN  
+				<include refid="view_project_flow_relation" /> p
+				ON i.INVOICE_PROJECTID = p.projectId
 			LEFT JOIN  <include refid="team" /> t
 				ON i.INVOICE_TEAMID = t.TEAMID
 			LEFT JOIN  <include refid="employee" /> e
